@@ -1,3 +1,7 @@
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import AccountScreen from "./src/screens/AccountScreen";
@@ -6,21 +10,45 @@ import SigninScreens from "./src/screens/SigninScreens";
 import TrackCreateScreen from "./src/screens/TrackCreateScreen";
 import TrackDetailScreen from "./src/screens/TrackDetailScreen";
 import TrackListScreen from "./src/screens/TrackListScreen";
+import { Provider as AuthProvider } from "./src/context/AuthContext";
 
-export default function App() {
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+let loggedIN = false;
+
+function TrackListFlow() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator initialRouteName="TrackList">
+      <Stack.Screen name="TrackList" component={TrackListScreen} />
+      <Stack.Screen name="TrackDetail" component={TrackDetailScreen} />
+    </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default function App() {
+  return (
+    <AuthProvider>
+      <NavigationContainer>
+        {loggedIN === false ? (
+          <Stack.Navigator initialRouteName="Sign in">
+            <Stack.Screen
+              name="Sign in"
+              component={SigninScreens}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="Sign up" component={SignupScreens} />
+          </Stack.Navigator>
+        ) : (
+          <Tab.Navigator>
+            <Tab.Screen
+              name="TrackListFlow"
+              component={TrackListFlow}
+              options={{ headerShown: false }}
+            />
+            <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
+            <Tab.Screen name="Account" component={AccountScreen} />
+          </Tab.Navigator>
+        )}
+      </NavigationContainer>
+    </AuthProvider>
+  );
+}
