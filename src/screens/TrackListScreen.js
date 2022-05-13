@@ -7,7 +7,9 @@ const TrackListScreen = () => {
       <Text style={{ fontSize: 48 }}>TrackListScreen</Text>
       <Button
         title="Go To TrackDetail"
-        onPress={() => navigation.navigate("TrackDetail")}
+        onPress={() =>
+          navigation.navigate("TrackListFlow", { screen: "TrackDetail" })
+        }
       />
     </>
   );

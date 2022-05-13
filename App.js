@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,6 +11,7 @@ import TrackCreateScreen from "./src/screens/TrackCreateScreen";
 import TrackDetailScreen from "./src/screens/TrackDetailScreen";
 import TrackListScreen from "./src/screens/TrackListScreen";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
+import { Context as AuthContext } from "./src/context/AuthContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,31 +25,59 @@ function TrackListFlow() {
     </Stack.Navigator>
   );
 }
+
+function Home() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="TrackListFlow"
+        component={TrackListFlow}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
+    </Tab.Navigator>
+  );
+}
+
+function Routing() {
+  const { state } = useContext(AuthContext);
+
+  console.log("# state", state);
+  return (
+    <NavigationContainer>
+      {!state.token ? (
+        <Stack.Navigator initialRouteName="Sign_in">
+          <Stack.Screen
+            name="Sign_in"
+            component={SigninScreens}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Sign_up"
+            component={SignupScreens}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Tab.Navigator>
+          <Tab.Screen
+            name="TrackListFlow"
+            component={TrackListFlow}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
+          <Tab.Screen name="Account" component={AccountScreen} />
+        </Tab.Navigator>
+      )}
+    </NavigationContainer>
+  );
+}
+
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        {loggedIN === false ? (
-          <Stack.Navigator initialRouteName="Sign in">
-            <Stack.Screen
-              name="Sign in"
-              component={SigninScreens}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Sign up" component={SignupScreens} />
-          </Stack.Navigator>
-        ) : (
-          <Tab.Navigator>
-            <Tab.Screen
-              name="TrackListFlow"
-              component={TrackListFlow}
-              options={{ headerShown: false }}
-            />
-            <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
-            <Tab.Screen name="Account" component={AccountScreen} />
-          </Tab.Navigator>
-        )}
-      </NavigationContainer>
+      <Routing />
     </AuthProvider>
   );
 }
