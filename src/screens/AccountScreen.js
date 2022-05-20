@@ -1,15 +1,17 @@
-import React from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet } from "react-native";
+import { Text, Button } from "react-native-elements";
+import { Context as AuthContext } from "../context/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const AccountScreen = () => {
+const AccountScreen = ({ navigation }) => {
+  const { signout } = useContext(AuthContext);
+
   return (
-    <>
+    <SafeAreaView forceInset={{ top: "always" }}>
       <Text style={{ fontSize: 48 }}>AccountScreen</Text>
-      <Button
-        title="Go To Signin"
-        onPress={() => navigation.navigate("Signin")}
-      />
-    </>
+      <Button title="Sign Out" onPress={signout} />
+    </SafeAreaView>
   );
 };
 

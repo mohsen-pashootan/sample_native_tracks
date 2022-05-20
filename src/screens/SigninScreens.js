@@ -1,17 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { View, Button, StyleSheet } from "react-native";
-import { setNavigator } from "./../helper/navigationRef";
 import { Context as AuthContext } from "../context/AuthContext";
 import AuthForm from "./../components/AuthForm";
 import NavLink from "../components/NavLink";
 
 const SigninScreens = ({ navigation }) => {
-  const { state, signin, clearErrorMessage, tryLocalSigin } =
-    useContext(AuthContext);
-  useEffect(() => {
-    tryLocalSigin();
-    setNavigator(navigation);
+  const { state, signin, clearErrorMessage } = useContext(AuthContext);
 
+  useEffect(() => {
     const unsubscribeBlur = navigation.addListener("blur  ", () =>
       clearErrorMessage()
     );
@@ -26,10 +22,7 @@ const SigninScreens = ({ navigation }) => {
         onSubmit={signin}
         submitButtonText="Sign In"
       />
-      <Button
-        title="Go To mainFlow"
-        onPress={() => navigation.navigate("Home")}
-      />
+
       <NavLink
         text="Dont have an account? Sign up instead"
         routName="Sign_up"

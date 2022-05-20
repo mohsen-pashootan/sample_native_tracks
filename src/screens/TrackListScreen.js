@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
 
-const TrackListScreen = () => {
+const TrackListScreen = ({ navigation }) => {
   return (
-    <>
+    <View>
       <Text style={{ fontSize: 48 }}>TrackListScreen</Text>
       <Button
         title="Go To TrackDetail"
@@ -11,7 +11,7 @@ const TrackListScreen = () => {
           navigation.navigate("TrackListFlow", { screen: "TrackDetail" })
         }
       />
-    </>
+    </View>
   );
 };
 
